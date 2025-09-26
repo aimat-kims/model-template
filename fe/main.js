@@ -81,7 +81,7 @@ function generateInputFields() {
             fieldsHtml += `
                 <div class="input-group">
                     <label for="input_${feature.name}">${feature.name} <span class="type-label">(${feature.type})</span></label>
-                    <input type="file" id="input_${feature.name}" accept="image/*" required onchange="previewImage(this, '${feature.name}')">
+                    <input type="file" id="input_${feature.name}" accept="image/*" onchange="previewImage(this, '${feature.name}')">
                     <div class="image-preview-container">
                         <img id="preview_${feature.name}" class="image-preview" alt="Image preview">
                         <br>
@@ -111,6 +111,41 @@ function generateInputFields() {
     }
 
     inputFieldsContainer.innerHTML = fieldsHtml;
+    
+    // Set default images for image inputs that have base64 values
+    configData.input_features.forEach(feature => {
+        if (feature.type === 'image' && feature.value) {
+            setDefaultImage(feature.name, feature.value);
+        }
+    });
+}
+
+// Set default image from base64 string
+function setDefaultImage(featureName, base64Value) {
+    const preview = document.getElementById(`preview_${featureName}`);
+    const downloadBtn = document.getElementById(`download_input_${featureName}`);
+    
+    if (preview && base64Value) {
+        preview.src = `data:image/jpeg;base64,${base64Value}`;
+        preview.style.display = 'block';
+        downloadBtn.style.display = 'inline-block';
+        
+        // Store the default base64 value for reset functionality
+        preview.setAttribute('data-default-base64', base64Value);
+    }
+}
+
+// Reset image to default base64 value
+function resetToDefaultImage(featureName) {
+    const preview = document.getElementById(`preview_${featureName}`);
+    const fileInput = document.getElementById(`input_${featureName}`);
+    const defaultBase64 = preview.getAttribute('data-default-base64');
+    
+    if (defaultBase64) {
+        preview.src = `data:image/jpeg;base64,${defaultBase64}`;
+        fileInput.value = ''; // Clear the file input
+        preview.setAttribute('data-using-default', 'true');
+    }
 }
 
 // Handle CSV file selection
@@ -329,9 +364,18 @@ async function collectInputData() {
         // Convert value based on type
         if (feature.type === 'image') {
             if (element.files && element.files[0]) {
+                // User uploaded a new image
                 value = await imageToBase64(element.files[0]);
             } else {
-                throw new Error(`Please select an image for ${feature.name}`);
+                // Check if using default image
+                const preview = document.getElementById(`preview_${feature.name}`);
+                const defaultBase64 = preview.getAttribute('data-default-base64');
+                if (defaultBase64) {
+                    // Use the default base64 value
+                    value = defaultBase64;
+                } else {
+                    throw new Error(`Please select an image for ${feature.name}`);
+                }
             }
         } else if (feature.type === 'int') {
             value = parseInt(element.value);

@@ -197,6 +197,27 @@ button:disabled {
     cursor: not-allowed;
 }
 
+.reset-btn {
+    background-color: #ffc107;
+    color: #212529;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    margin: 5px 0 5px 10px;
+    display: inline-block;
+}
+
+.reset-btn:hover {
+    background-color: #e0a800;
+}
+
+.reset-btn:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
+
 .image-preview-container {
     margin-top: 10px;
 }
@@ -207,17 +228,17 @@ button:disabled {
 
 /* Desktop layout for batch and single inputs */
 .input-container {
-    display: flex;
-    gap: 20px;
+    display: block; /* Changed from flex to block to stack sections vertically */
     margin: 20px 0;
 }
 
 .batch-section, .single-section {
-    flex: 1;
+    width: 100%; /* Changed from flex: 1 to full width */
     background-color: white;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 20px; /* Add margin between sections */
 }
 
 .batch-section h3, .single-section h3 {
@@ -227,10 +248,48 @@ button:disabled {
     padding-bottom: 10px;
 }
 
+/* Single inference input layout - inputs in same row with min width */
+.single-section .input-group {
+    display: inline-block;
+    min-width: 300px;
+    width: calc(33.333% - 15px); /* Three inputs per row with more spacing */
+    margin: 10px 7px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    vertical-align: top;
+    box-sizing: border-box;
+}
+
+/* Force 3 inputs per row on screens wider than 900px */
+@media (min-width: 900px) {
+    .single-section .input-group {
+        width: calc(33.333% - 5px);
+        max-width: 350px;
+    }
+}
+
+
+
+/* For smaller screens, reduce to 2 inputs per row */
+@media (max-width: 1000px) {
+    .single-section .input-group {
+        width: calc(50% - 10px);
+    }
+}
+
 /* Mobile responsive */
 @media (max-width: 768px) {
     .input-container {
-        flex-direction: column;
+        display: block; /* Keep as block for mobile */
+    }
+    
+    .single-section .input-group {
+        display: block;
+        width: 100%;
+        margin: 15px 0;
+        min-width: unset;
     }
     
     body {
