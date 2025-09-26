@@ -19,7 +19,7 @@ This file defines what data your model expects as input and what it will return 
 #### What you need to do:
 1. Open [`utils/config.py`](utils/config.py)
 2. Change `MODEL_NAME` to your actual model name (e.g., "image_classifier", "price_predictor")
-3. Update `MODEL_VERSION` if needed
+3. Update `MODEL_VERSION`, `MODEL_DESCRIPTION` and `MODEL_FIGURE` if needed
 4. **Configure INPUT_FEATURE_LIST**: This defines what inputs your model needs
    - `name`: The name of the input feature (e.g., "age", "income", "image_url")
    - `type`: The data type - can be "float", "int", "string" or "image"

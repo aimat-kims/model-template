@@ -1,7 +1,7 @@
 MODEL_NAME="your_model_name"
 MODEL_VERSION="v1.0.0"
 MODEL_DESCRIPTION="A brief description of your model."
-MODEL_FIGURE="image.png" # Your figure should be 512x512px for better display. 
+MODEL_FIGURE="image.png" # Your figure should be 2:1 for better display. 
 INPUT_FEATURE_LIST=[
     {
         "name": "your_input_name1",
